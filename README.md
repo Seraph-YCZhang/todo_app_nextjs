@@ -1,5 +1,7 @@
 This is a to-do list app bulit with Next.js.
+
 Achieved drag-able using react-beautiful-dnd.
+
 Styled app with tailwind.css
 
 ## Getting Started
