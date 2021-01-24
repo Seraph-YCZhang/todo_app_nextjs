@@ -8,15 +8,16 @@ export default function Home() {
             <Head>
                 <title>To-do App</title>
             </Head>
-            <div className='mx-auto p-4 rounded-md'>
-                <div>
-                    <h2 className='text-2xl mb-4'>This is a to-do app</h2>
-                    <div className='text-xl'>
-                        <div>A to-do lists for the app</div>
-                        <ul>
-                            <li>dnd drag-n-drop</li>
-                            <li>list</li>
-                        </ul>
+            <div
+                className=''
+                style={{ width: '100vw', height: '100%' }}
+            >
+                <div className='mx-auto p-4 rounded-md text-gray-500 text-9xl '>
+                    <div>
+                        <h2 className='text-6xl mb-4 font-bold'>DRAGGABLE TODO LIST</h2>
+                        <div className='text-4xl'>
+                            <div>NEXT.JS DJANGO TAILWIND.CSS</div>
+                        </div>
                     </div>
                 </div>
             </div>

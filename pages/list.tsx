@@ -88,6 +88,7 @@ const ListContext = createContext(null);
 const List: React.FC<ListProps> = ({}) => {
     const [showModal, setShowModal] = useState(false);
     const [alert, setAlert] = useState(false);
+    const [alertColor, setAlertColor] = useState<string>('blue');
     const [alertContent, setAlertContent] = useState<
         'Order Saved!' | 'Task Created!'
     >('Order Saved!');
@@ -159,6 +160,7 @@ const List: React.FC<ListProps> = ({}) => {
                 setItems(result);
                 setAlert(true);
                 setAlertContent('Order Saved!');
+                setAlertColor('green');
             }
         },
         [items, setItems]
@@ -185,7 +187,7 @@ const List: React.FC<ListProps> = ({}) => {
                     editItem={editItem}
                 />
                 <Alert
-                    color={'blue'}
+                    color={alertColor}
                     showAlert={alert}
                     setShowAlert={setAlert}
                     content={alertContent}
@@ -216,7 +218,10 @@ const List: React.FC<ListProps> = ({}) => {
                             )}
                         </Droppable>
                     </DragDropContext>
-                    <AddForm setAlertContent={setAlertContent} />
+                    <AddForm
+                        setAlertContent={setAlertContent}
+                        setAlertColor={setAlertColor}
+                    />
                 </div>
             </Layout>
         </ListContext.Provider>

@@ -9,10 +9,16 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import axios from 'axios';
 interface indexProps {
-  setAlertContent:React.Dispatch<React.SetStateAction<"Order Saved!" | "Task Created!">>
+    setAlertContent: React.Dispatch<
+        React.SetStateAction<'Order Saved!' | 'Task Created!'>
+    >;
+    setAlertColor: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const index: React.FC<indexProps> = ({setAlertContent}): JSX.Element => {
+const index: React.FC<indexProps> = ({
+    setAlertContent,
+    setAlertColor
+}): JSX.Element => {
     const [title, setTitle] = useState<string>('');
     const [desc, setDesc] = useState<string>('');
     const [date, setDate] = useState<Date>(new Date());
@@ -24,13 +30,14 @@ const index: React.FC<indexProps> = ({setAlertContent}): JSX.Element => {
         setDate(new Date());
         setStatus(false);
     }, []);
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (title === '' || desc === '' || !dayjs(date).isValid()) {
             return;
         }
         try {
-            addItem();
+            await addItem();
+
             reset();
         } catch (e) {
             console.error(e);
@@ -58,7 +65,8 @@ const index: React.FC<indexProps> = ({setAlertContent}): JSX.Element => {
                 addItem
             );
             console.log(res.data);
-            setAlertContent('Task Created!')
+            setAlertContent('Task Created!');
+            setAlertColor('blue');
             const backItem = res.data;
             const retArray: Thing[] = [...changedArray, backItem];
             const anotherArray: Thing[] =

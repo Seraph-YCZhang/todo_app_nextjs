@@ -34,14 +34,14 @@ const index: React.FC<indexProps> = ({ editItem, showModal, setShowModal }) => {
         setDate(dayjs(editItem.date).toDate());
         setStatus(editItem.completed);
     }, [editItem]);
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         e.stopPropagation();
         if (title === '' || desc === '' || !dayjs(date).isValid()) {
             return;
         }
         try {
-            edit();
+            await edit();
             setShowModal(false);
             refreshList();
         } catch (e) {
