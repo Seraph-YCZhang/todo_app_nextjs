@@ -1,9 +1,10 @@
 export type Thing = {
-    id: string;
-    name?: string;
+    id?: string;
+    title?: string;
     description: string;
     date: string;
-    status: 'to-do' | 'finished';
+    position: number;
+    completed: boolean;
 };
 
 export type DropId = 'todo' | 'finish';

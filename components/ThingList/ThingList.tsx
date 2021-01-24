@@ -36,29 +36,35 @@ export const ThingList: React.FC<ThingListProps> = ({
             </div>
             <div
                 className={`flex flex-col gap-4 items-center ${
-                    items.length === 0
-                        ? 'bg-gray-200 h-full rounded-md'
-                        : ''
+                    items.length === 0 ? 'bg-gray-200 h-full rounded-md' : ''
                 } pb-8`}
 
                 // style={getStyle(snapshot.isDraggingOver)}
             >
                 {items.length > 0 ? (
-                    items.map((item, index) => (
-                        <Draggable
-                            key={item.id}
-                            draggableId={item.id}
-                            index={index}
+                    <>
+                        {items.map((item, index) => (
+                            <Draggable
+                                key={item.id}
+                                draggableId={'' + item.id}
+                                index={index}
+                            >
+                                {(provided, snapshot) => (
+                                    <ThingItem
+                                        item={item}
+                                        provided={provided}
+                                        snapshot={snapshot}
+                                    />
+                                )}
+                            </Draggable>
+                        ))}
+                        <p
+                            className='p-3 m-2 rounded-md text-center cursor-pointer hover:bg-gray-300 flex items-center justify-center text-gray-500 transition-all duration-300 ease-in-out'
+                            style={{ width: '90%' }}
                         >
-                            {(provided, snapshot) => (
-                                <ThingItem
-                                    item={item}
-                                    provided={provided}
-                                    snapshot={snapshot}
-                                />
-                            )}
-                        </Draggable>
-                    ))
+                            <FaPlusCircle className='mr-2' /> Add Task
+                        </p>
+                    </>
                 ) : (
                     <p
                         className='p-3 m-2 rounded-md text-center cursor-pointer hover:bg-gray-300 flex items-center justify-center text-gray-500 transition-all duration-300 ease-in-out'

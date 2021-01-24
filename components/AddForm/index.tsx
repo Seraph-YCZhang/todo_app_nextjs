@@ -7,23 +7,26 @@ import FormItem from '../FormItem';
 import { default as dayjs } from 'dayjs';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-interface indexProps {}
+import axios from 'axios';
+interface indexProps {
+  setAlertContent:React.Dispatch<React.SetStateAction<"Order Saved!" | "Task Created!">>
+}
 
-const index: React.FC<indexProps> = ({}): JSX.Element => {
-    const [name, setName] = useState<string>('');
+const index: React.FC<indexProps> = ({setAlertContent}): JSX.Element => {
+    const [title, setTitle] = useState<string>('');
     const [desc, setDesc] = useState<string>('');
     const [date, setDate] = useState<Date>(new Date());
     const [status, setStatus] = useState<boolean>(false);
     const [items, setItems] = useListContext();
     const reset = useCallback(() => {
-        setName('');
+        setTitle('');
         setDesc('');
         setDate(new Date());
         setStatus(false);
     }, []);
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if (name === '' || desc === '' || !dayjs(date).isValid()) {
+        if (title === '' || desc === '' || !dayjs(date).isValid()) {
             return;
         }
         try {
@@ -33,35 +36,48 @@ const index: React.FC<indexProps> = ({}): JSX.Element => {
             console.error(e);
         }
     };
-    const addItem = () => {
+    const addItem = async () => {
         // console.log(status);
-        const changedArray: Thing[] =
-            status === true
-                ? Array.from(items.finished)
-                : Array.from(items.todos);
-        const prefix = status === true ? 'finish' : 'todo';
-        const addItem: Thing = {
-            name,
-            id: prefix + ' ' + Date.now(),
-            description: desc,
-            date: dayjs(date).format('DD/MM/YYYY'),
-            status: status === true ? 'finished' : 'to-do'
-        };
-        const retArray: Thing[] = [...changedArray, addItem];
-        const anotherArray: Thing[] =
-            status === true
-                ? Array.from(items.todos)
-                : Array.from(items.finished);
-        if (prefix === 'todo') {
-            setItems({
-                todos: retArray,
-                finished: anotherArray
-            });
-        } else {
-            setItems({
-                todos: anotherArray,
-                finished: retArray
-            });
+        try {
+            const changedArray: Thing[] =
+                status === true
+                    ? Array.from(items.finished)
+                    : Array.from(items.todos);
+            const prefix = status === true ? 'finish' : 'todo';
+            const addItem: Thing = {
+                title,
+                description: desc,
+                date: dayjs(date).format('YYYY-MM-DD'),
+                completed: status,
+                position:
+                    Math.max(...changedArray.map(ele => ele.position)) + 100
+            };
+            console.log(addItem);
+            const res = await axios.post(
+                'http://localhost:8000/api/todos/',
+                addItem
+            );
+            console.log(res.data);
+            setAlertContent('Task Created!')
+            const backItem = res.data;
+            const retArray: Thing[] = [...changedArray, backItem];
+            const anotherArray: Thing[] =
+                status === true
+                    ? Array.from(items.todos)
+                    : Array.from(items.finished);
+            if (prefix === 'todo') {
+                setItems({
+                    todos: retArray,
+                    finished: anotherArray
+                });
+            } else {
+                setItems({
+                    todos: anotherArray,
+                    finished: retArray
+                });
+            }
+        } catch (e) {
+            console.error(e);
         }
     };
     return (
@@ -77,8 +93,8 @@ const index: React.FC<indexProps> = ({}): JSX.Element => {
                     <Label htmlFor='task-name'>Name</Label>
                     <Input
                         id='task-name'
-                        value={name}
-                        onChange={e => setName(e.target.value)}
+                        value={title}
+                        onChange={e => setTitle(e.target.value)}
                     />
                 </FormItem>
                 <FormItem>
@@ -93,7 +109,7 @@ const index: React.FC<indexProps> = ({}): JSX.Element => {
                     <Label htmlFor='date'>Date</Label>
                     <DatePicker
                         selected={date}
-                        onChange={date => setDate(date)}
+                        onChange={date => setDate(date as Date)}
                     />
                 </FormItem>
                 <FormItem col={false}>
@@ -106,7 +122,7 @@ const index: React.FC<indexProps> = ({}): JSX.Element => {
                         className='self-center ml-2'
                     />
                 </FormItem>
-                <button className='p-4 px-6 bg-blue-500 rounded-lg text-white mt-2 hover:bg-blue-400 transition-all'>
+                <button className='ml-auto block p-4 px-6 bg-blue-500 rounded-lg text-white mt-2 hover:bg-blue-400 transition-all'>
                     Create
                 </button>
             </form>

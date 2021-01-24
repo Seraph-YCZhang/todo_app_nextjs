@@ -15,22 +15,22 @@ interface AppState {
     ];
 }
 export const AppStateContext = createContext<AppState>(null);
-export const getItems = (count: number, todo: boolean, offset: number = 0) => {
-    console.log('trigger');
-    return Array.from({ length: count }, (v, k) => k).map(
-        k =>
-            ({
-                name: 'Task ' + k,
-                id: `item-${todo ? 'todo' : 'finished'}-${k}`,
-                description: 'This is a mock data ' + k,
-                date: `12/${parseInt('' + Math.random() * 10)}/2020`,
-                status: todo ? 'to-do' : 'finished'
-            } as Thing)
-    );
-};
+// export const getItems = (count: number, todo: boolean, offset: number = 0) => {
+//     console.log('trigger');
+//     return Array.from({ length: count }, (v, k) => k).map(
+//         k =>
+//             ({
+//                 name: 'Task ' + k,
+//                 id: `item-${todo ? 'todo' : 'finished'}-${k}`,
+//                 description: 'This is a mock data ' + k,
+//                 date: `12/${parseInt('' + Math.random() * 10)}/2020`,
+//                 status: todo ? 'to-do' : 'finished'
+//             } as Thing)
+//     );
+// };
 export default function AppContext({ children }: React.PropsWithChildren<{}>) {
-    const todosAndSetTodos = useState(getItems(10, true));
-    const finishesAndSetFinishes = useState(getItems(10, false));
+    const todosAndSetTodos = useState([]);
+    const finishesAndSetFinishes = useState([]);
     return (
         <AppStateContext.Provider
             value={{ todosAndSetTodos, finishesAndSetFinishes }}
